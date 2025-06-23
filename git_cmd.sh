@@ -21,3 +21,6 @@ git commit -m "Merged remote main into local"
 git push -u origin main
 git log
 
+#save password
+git config --global credential.helper store
+
