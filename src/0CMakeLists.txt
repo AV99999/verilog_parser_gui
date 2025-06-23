@@ -1,0 +1,51 @@
+# src/CMakeLists.txt
+
+# Collect shared parser source
+set(VERILOG_PARSER_SRC
+    verilog_parser/VerilogParser.cpp
+    verilog_parser/VerilogParser.h
+)
+
+# --- CLI App ---
+add_executable(verilog_tool
+    main.cpp
+    ${VERILOG_PARSER_SRC}
+)
+
+target_include_directories(verilog_tool PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/verilog_parser
+)
+
+# --- GUI App ---
+option(BUILD_GUI "Build Qt GUI with Tcl shell" ON)
+
+if (BUILD_GUI)
+    find_package(Qt5 REQUIRED COMPONENTS Widgets)
+
+    # Tcl paths
+    set(TCL_INCLUDE_PATH "/usr/include/tcl" CACHE PATH "Path to Tcl headers")
+    find_library(TCL_LIBRARY NAMES tcl HINTS /usr/lib /usr/lib/x86_64-linux-gnu)
+
+    if (NOT TCL_LIBRARY)
+        message(FATAL_ERROR "Tcl library not found. Please install tcl-dev or set TCL_LIBRARY.")
+    endif()
+
+    add_executable(verilog_gui
+        main_gui.cpp
+        gui/MainWindow.cpp
+	gui/CommandLineEdit.h
+        gui/MainWindow.h
+        ${VERILOG_PARSER_SRC}
+    )
+
+    target_include_directories(verilog_gui PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/verilog_parser
+        ${CMAKE_CURRENT_SOURCE_DIR}/gui
+        ${TCL_INCLUDE_PATH}
+    )
+
+    target_link_libraries(verilog_gui Qt5::Widgets ${TCL_LIBRARY})
+endif()
+
