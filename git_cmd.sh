@@ -29,3 +29,7 @@ git config --global credential.helper store
 sudo apt install git-filter-repo
 git filter-repo --path git_hash.info --invert-paths --force
 
+#since above cmd removes info and all history
+git remote add origin https://github.com/AV99999/verilog_parser_gui.git
+git push --force origin main
+
