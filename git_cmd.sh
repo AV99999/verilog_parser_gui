@@ -24,3 +24,8 @@ git log
 #save password
 git config --global credential.helper store
 
+
+#delete hist bad sensitive info
+sudo apt install git-filter-repo
+git filter-repo --path git_hash.info --invert-paths --force
+
